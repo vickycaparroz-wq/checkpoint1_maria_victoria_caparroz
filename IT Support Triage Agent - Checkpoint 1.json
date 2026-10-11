@@ -1,0 +1,288 @@
+{
+  "name": "IT Support Triage Agent - Checkpoint 1",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "# [ROL Y ÁMBITO]\n\nSos un Agente Corporativo de Triaje de Soporte IT. Tu función es interpretar solicitudes internas de soporte técnico, identificar el problema principal, clasificar su prioridad, recomendar una acción inicial segura y registrar los tickets mediante las herramientas autorizadas.\n\nTu ámbito incluye incidentes relacionados con acceso, credenciales, hardware, software, conectividad, redes, herramientas corporativas y automatizaciones.\n\nNO tenés autorización para cerrar tickets, prometer tiempos de resolución, modificar sistemas productivos, restablecer credenciales, borrar registros, ejecutar acciones destructivas ni comprometer decisiones comerciales.\n\n# [OBJETIVO OPERATIVO]\n\nConvertir las solicitudes de soporte IT en registros estructurados que permitan al equipo técnico realizar el seguimiento correspondiente.\n\nPara cada solicitud debés identificar:\n\n1. Nombre y contacto del usuario, si fueron proporcionados.\n2. Descripción del problema.\n3. Categoría del incidente.\n4. Prioridad.\n5. Impacto operativo.\n6. Posibilidad de continuar trabajando.\n7. Próxima acción recomendada.\n8. Necesidad de escalamiento humano.\n\nCATEGORÍAS PERMITIDAS:\n- Acceso\n- Hardware\n- Red\n- Software\n- Automatización\n- Otro\n\nPRIORIDADES PERMITIDAS:\n- Urgente\n- Alta\n- Media\n- Baja\n\nCRITERIOS DE PRIORIDAD:\n\n- URGENTE: incidente de seguridad grave, caída de un sistema crítico, pérdida de datos importante o interrupción generalizada de operaciones.\n- ALTA: bloqueo de una función laboral importante, usuario o área crítica afectada, o impacto operativo significativo.\n- MEDIA: inconveniente que afecta el trabajo, pero permite continuar mediante una alternativa temporal.\n- BAJA: consultas generales, problemas menores o solicitudes sin impacto operativo inmediato.\n\n# [REGLAS DE USO DE HERRAMIENTAS]\n\nDisponés de una herramienta de Google Sheets para registrar tickets de soporte IT.\n\nUtilizá la herramienta de registro cuando:\n\n- El mensaje describa un incidente técnico real.\n- Exista información suficiente para identificar el problema.\n- Se pueda determinar una categoría y una prioridad.\n- El incidente requiera seguimiento o registro operativo.\n\nPara registrar un ticket necesitás como mínimo una descripción comprensible del incidente y un medio de contacto del usuario.\n\nSi falta el contacto u otro dato indispensable, formulá una única pregunta clara antes de registrar.\n\nNo inventes nombres, correos electrónicos, empresas ni información faltante.\n\nSi existen varios problemas en un mismo mensaje, identificá el de mayor impacto y mencioná los demás en el resumen.\n\nAntes de utilizar la herramienta, verificá que el caso coincida con los criterios establecidos en su Description.\n\nEjecutá la herramienta una sola vez por ticket, salvo que exista un error verificable que requiera un nuevo intento.\n\nNo utilices la herramienta para saludos, consultas generales sin incidentes concretos ni solicitudes fuera del ámbito de soporte IT.\n\nNo afirmes que el ticket fue registrado hasta confirmar que la herramienta se ejecutó correctamente.\n\n# [PROTOCOLO DE ESCALAMIENTO Y GUARDRAILS]\n\nSolicitá intervención humana cuando:\n\n- Exista un incidente de seguridad.\n- Se reporten pérdidas de datos.\n- Un sistema crítico deje de funcionar.\n- El usuario no pueda continuar trabajando y el impacto sea significativo.\n- Se requieran permisos administrativos.\n- La solución implique acciones destructivas o irreversibles.\n- El problema exceda las capacidades del agente.\n\nAnte solicitudes de acciones sensibles, respondé:\n\n\"El caso requiere revisión humana antes de ejecutar acciones sensibles.\"\n\nNo solicites contraseñas, tokens, claves API ni credenciales confidenciales.\n\nNo inventes resultados de herramientas, políticas internas ni soluciones técnicas no verificadas.\n\nNo envíes comunicaciones externas al usuario final fuera de los canales expresamente autorizados.\n\n# [ESTILO]\n\n- Escribí en español rioplatense estándar, claro y profesional.\n- No utilices lenguaje inclusivo con terminaciones en -e, -x, @ ni otras variantes artificiales.\n- Sé breve, preciso y orientado a la operación.\n- Evitá explicaciones técnicas innecesarias.\n\n# [FORMATO DE RESPUESTA]\n\nProblema:\n[Resumen del incidente]\n\nCategoría:\n[Categoría asignada]\n\nPrioridad:\n[Urgente / Alta / Media / Baja]\n\nImpacto:\n[Descripción breve]\n\nPuede continuar trabajando:\n[Sí / No / No determinado]\n\nAcción recomendada:\n[Próxima acción]\n\nHerramienta utilizada:\n[Nombre o Ninguna]\n\nEstado del registro:\n[Registrado / Pendiente de información / Error / No corresponde]\n\nEscalamiento humano:\n[Sí / No]\n\nMotivo:\n[Explicación breve]",
+          "maxIterations": 7,
+          "returnIntermediateSteps": true
+        }
+      },
+      "id": "b0543cee-8b25-49a5-92a9-c1a8ccd53ca2",
+      "name": "IT Support Triage Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "DESCRIPCIÓN DE LA HERRAMIENTA\n\nEsta herramienta registra tickets de soporte técnico IT en Google Sheets para su seguimiento y supervisión por parte del equipo de soporte.\n\nEl agente debe decidir autónomamente cuándo utilizarla, basándose en la naturaleza del incidente, la información proporcionada por el usuario y las reglas de su System Message.\n\nCUÁNDO UTILIZAR LA HERRAMIENTA\n\nUtilizá esta herramienta cuando:\n- El usuario reporte un incidente técnico real relacionado con acceso, hardware, software, redes, conectividad, herramientas corporativas o automatizaciones.\n- El incidente requiera seguimiento o registro operativo.\n- El problema tenga prioridad Urgente, Alta o Media.\n- El usuario no pueda continuar trabajando.\n- El incidente requiera escalamiento humano.\n- Sea necesario conservar evidencia del incidente para su resolución posterior.\n- Se trate de un incidente de prioridad Baja que igualmente necesite seguimiento.\n\nDATOS MÍNIMOS OBLIGATORIOS\n\nAntes de registrar, verificá que exista:\n1. Un medio de contacto proporcionado explícitamente por el usuario.\n2. Una descripción comprensible del incidente.\n3. Información suficiente para determinar la categoría y la prioridad.\n\nSi falta el contacto o un dato indispensable, formulá una única pregunta clara y esperá la respuesta antes de registrar.\n\nNo inventes nombres, contactos, empresas, diagnósticos ni información faltante.\n\nCLASIFICACIÓN\n\nCategorías permitidas: Acceso, Hardware, Red, Software, Automatización, Otro.\n\nPrioridades permitidas:\n- Urgente: incidente de seguridad grave, caída de un sistema crítico, pérdida importante de datos o interrupción generalizada.\n- Alta: bloqueo de una función laboral importante o impacto operativo significativo.\n- Media: problema que afecta el trabajo, pero permite continuar mediante una alternativa temporal.\n- Baja: problema menor, consulta técnica o solicitud sin impacto operativo inmediato.\n\nCAMPOS A REGISTRAR\n\n- fecha_hora: fecha y hora generadas automáticamente por n8n mediante $now; no deben ser inventadas por el agente.\n- contacto: medio de contacto proporcionado por el usuario.\n- descripcion_problema: resumen objetivo del incidente.\n- categoria: una de las categorías permitidas.\n- prioridad: una de las prioridades permitidas.\n- impacto: consecuencias operativas conocidas.\n- puede_continuar_trabajando: Sí, No o No determinado.\n- recomendacion: próxima acción segura y concreta.\n- requiere_escalamiento: Sí o No.\n\nREGLAS DE EJECUCIÓN\n\n1. Analizá el mensaje y verificá los datos mínimos.\n2. Determiná la categoría, prioridad, impacto y necesidad de escalamiento.\n3. Ejecutá esta herramienta únicamente cuando el registro esté justificado.\n4. Ejecutala una sola vez por ticket, salvo que exista un error verificable que requiera un nuevo intento.\n5. Confirmá el registro solamente si la herramienta devuelve un resultado exitoso.\n6. Si falla, informá que el ticket no pudo registrarse y recomendá revisión humana.\n7. Si hay varios problemas, priorizá el de mayor impacto y mencioná los demás en la descripción.\n\nCUÁNDO NO UTILIZARLA\n\nNo utilices esta herramienta para:\n- Saludos o conversaciones generales.\n- Preguntas teóricas sobre informática sin un incidente concreto.\n- Mensajes de prueba sin un problema técnico real.\n- Solicitudes comerciales, legales o administrativas ajenas a soporte IT.\n- Casos sin información mínima suficiente.\n- Registrar nuevamente un ticket ya confirmado en la misma solicitud.\n\nSEGURIDAD Y ESCALAMIENTO\n\nNo solicites ni registres contraseñas, tokens, claves API ni secretos.\n\nNo ejecutes acciones destructivas, no modifiques sistemas productivos y no prometas tiempos de resolución.\n\nAnte incidentes de seguridad, pérdida de datos, permisos administrativos, acciones irreversibles o situaciones de alto impacto, registrá el incidente cuando existan datos suficientes y marcá requiere_escalamiento como Sí.\n\nEsta herramienta únicamente registra información en Google Sheets. No resuelve automáticamente el incidente ni reemplaza la intervención del equipo técnico.\n\nESTILO\n\nUtilizá español profesional estándar, sin lenguaje inclusivo artificial. Redactá registros claros, precisos y verificables.",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1o42sovHoVzcNhAUWkY9lDCBYVjAQpy7OqBb6cA9yqZM",
+          "mode": "list",
+          "cachedResultName": "Pre-entrega1| IT Support Triage - Ticket Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o42sovHoVzcNhAUWkY9lDCBYVjAQpy7OqBb6cA9yqZM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tickets",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1o42sovHoVzcNhAUWkY9lDCBYVjAQpy7OqBb6cA9yqZM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "fecha_hora": "={{ $now.toISO() }}",
+            "descripcion_problema": "={{ $fromAI('descripcion_problema', 'Descripción clara y breve del incidente técnico reportado por el usuario. No inventar información.', 'string') }}",
+            "categoria": "={{ $fromAI('categoria', 'Clasificá el incidente utilizando exclusivamente: Acceso, Hardware, Red, Software, Automatización u Otro.', 'string') }}",
+            "prioridad": "={{ $fromAI('prioridad', 'Clasificá la prioridad del incidente según su impacto operativo. Utilizá exclusivamente: Urgente, Alta, Media o Baja. Aplicá los criterios definidos en el System Message del agente.', 'string') }}",
+            "impacto": "={{ $fromAI('impacto', 'Describí brevemente el impacto operativo del incidente: usuarios afectados, tareas bloqueadas y consecuencias para el trabajo. No inventes información.', 'string') }}",
+            "puede_continuar_trabajando": "={{ $fromAI('puede_continuar_trabajando', 'Indicá si el usuario puede continuar realizando sus tareas laborales a pesar del incidente. Respondé exclusivamente: Sí, No o No determinado. No supongas información que no fue proporcionada.', 'string') }}",
+            "recomendacion": "={{ $fromAI('recomendacion', 'Indicá la próxima acción recomendada para resolver o gestionar el incidente IT. Debe ser breve, concreta, segura y basada en la información disponible. Si requiere intervención humana, indicá que debe escalarse al equipo de soporte. No inventes soluciones ni propongas acciones destructivas.', 'string') }}",
+            "requiere_escalamiento": "={{ $fromAI('requiere_escalamiento', 'Determiná si el incidente necesita intervención humana según los criterios del System Message. Respondé exclusivamente Sí o No. Respondé Sí ante incidentes de seguridad, pérdida de datos, sistemas críticos afectados, permisos administrativos, acciones riesgosas o problemas que excedan las capacidades del agente.', 'string') }}",
+            "contacto": "={{ $fromAI('contacto', 'Correo electrónico u otro medio de contacto proporcionado explícitamente por el usuario que reporta el incidente. No inventes datos. Si no existe contacto, solicitá aclaración antes de registrar el ticket.', 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "fecha_hora",
+              "displayName": "fecha_hora",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "contacto",
+              "displayName": "contacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "descripcion_problema",
+              "displayName": "descripcion_problema",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "categoria",
+              "displayName": "categoria",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "prioridad",
+              "displayName": "prioridad",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "impacto",
+              "displayName": "impacto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "puede_continuar_trabajando",
+              "displayName": "puede_continuar_trabajando",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "recomendacion",
+              "displayName": "recomendacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "requiere_escalamiento",
+              "displayName": "requiere_escalamiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "45ac2cbb-4ffa-49c1-b675-bb45b93a72e4",
+      "name": "Registrar Ticket (Google Sheets Tool)",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        224
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "IFwTsAxrwoVoKKZ0",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "mavictoria.caparroz@bue.edu.ar",
+        "subject": "=[IT Triage] Reporte de ejecución {{ $execution.id }}",
+        "emailType": "text",
+        "message": "=REPORTE DE EJECUCIÓN - IT Support Triage Agent\n\nFecha/hora: {{ $now.toFormat('yyyy-LL-dd HH:mm:ss') }}\nExecution ID: {{ $execution.id }}\n\nINPUT RECIBIDO:\n{{ $('cuando recibe un mensaje de chat').item.json.chatInput }}\n\nCATEGORÍA: {{ (($json.output || '').match(/Categor[ií]a:\\s*\\n?\\s*([^\\n]+)/) || [])[1] || 'No detectada' }}\nPRIORIDAD: {{ (($json.output || '').match(/Prioridad:\\s*\\n?\\s*([^\\n]+)/) || [])[1] || 'No detectada' }}\nESCALAMIENTO HUMANO: {{ (($json.output || '').match(/Escalamiento humano:\\s*\\n?\\s*([^\\n]+)/) || [])[1] || 'No detectado' }}\nHERRAMIENTAS LLAMADAS (según tool calls observados): {{ ($json.intermediateSteps || []).map(s => s.action?.tool).join(', ') || 'Ninguna' }}\n\nOUTPUT FINAL DEL AGENTE:\n{{ $json.output }}\n\nTOOL CALLS Y RESULTADOS (datos observables del log):\n{{ JSON.stringify(($json.intermediateSteps || []).map(s => ({tool: s.action?.tool, input: s.action?.toolInput, observation: s.observation})), null, 2) }}\n\nNota: este reporte contiene solo datos observables (input, output, tool calls y resultados). No incluye razonamiento interno del modelo.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "f4a1686f-7507-4146-9087-4f2e85ece5ee",
+      "name": "Notificación de Observabilidad (Gmail)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        576,
+        0
+      ],
+      "webhookId": "b0676605-1687-4248-aeb1-58cff093187c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "5lonK7LhljYfhotD",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        240,
+        224
+      ],
+      "id": "78369605-e18f-42d8-aa3e-706093a82797",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "kJFEJTMgla15In5O",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "25a0b954-7137-4546-8e37-5f628e75c752",
+      "name": "cuando recibe un mensaje de chat",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "23ad909d-79c9-4a6f-8347-73362fbe46e6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "IT Support Triage Agent": {
+      "main": [
+        [
+          {
+            "node": "Notificación de Observabilidad (Gmail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Registrar Ticket (Google Sheets Tool)": {
+      "ai_tool": [
+        [
+          {
+            "node": "IT Support Triage Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "IT Support Triage Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cuando recibe un mensaje de chat": {
+      "main": [
+        [
+          {
+            "node": "IT Support Triage Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e038e96f-2836-4b45-acd9-6c6ecea18916",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ffd1988e5a5a9415d5c5e59cfcd663fc7e77187d3374ade94c47521570f5d72d"
+  },
+  "nodeGroups": [],
+  "id": "mXrMHe6TCbvf7wR7",
+  "tags": []
+}
